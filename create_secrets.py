@@ -1,40 +1,26 @@
 import os
 from github import Github
 
-# ✅ Load environment variables
+# Fetch environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_OWNER = os.getenv("GITHUB_OWNER")
-GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")  # Corrected to fetch the repository name
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")  # Contains "owner/repo"
 
-if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPOSITORY:
-    raise ValueError("❌ Missing required environment variables! Check GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPOSITORY.")
+if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+    raise ValueError("❌ Missing required environment variables: GITHUB_TOKEN or GITHUB_REPOSITORY.")
 
-# ✅ Authenticate with GitHub API
+# Initialize GitHub API client
 github_client = Github(GITHUB_TOKEN)
 
 try:
-    print(f"🔹 Fetching repository: {GITHUB_OWNER}/{GITHUB_REPOSITORY}")
-    
-    # 🔹 Get the repository object
-    repo = github_client.get_repo(f"{GITHUB_OWNER}/{GITHUB_REPOSITORY}")
+    # Get the target repository
+    repo = github_client.get_repo(GITHUB_REPOSITORY)  # No need to concatenate owner
 
-    # 🔹 Define 10 secrets with empty values
-    secrets = {
-        "SECRET_1": "",
-        "SECRET_2": "",
-        "SECRET_3": "",
-        "SECRET_4": "",
-        "SECRET_5": "",
-        "SECRET_6": "",
-        "SECRET_7": "",
-        "SECRET_8": "",
-        "SECRET_9": "",
-        "SECRET_10": "",
-    }
+    # Define secrets with empty values
+    secrets = {f"SECRET_{i}": "" for i in range(1, 11)}
 
-    # 🔹 Add secrets to the repository
+    # Create secrets in the repository
     for secret_name, secret_value in secrets.items():
-        repo.set_secret(secret_name, secret_value)  # Corrected secret creation method
+        repo.create_secret(secret_name, secret_value)
         print(f"✅ Secret '{secret_name}' created successfully in {GITHUB_REPOSITORY}")
 
 except Exception as e:
