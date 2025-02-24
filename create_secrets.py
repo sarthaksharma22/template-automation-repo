@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 # Load GitHub token from environment variables
 load_dotenv()
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_TOKEN = os.getenv("GH_TOKEN")
 GITHUB_REPO = os.getenv("GITHUB_REPO")  # Repo where secrets will be added
 GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # Owner (org/user) of the repo
 
