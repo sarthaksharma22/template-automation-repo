@@ -32,8 +32,8 @@ try:
 
     # 🔹 Add secrets to GitHub
     for secret_name, secret_value in secrets.items():
-        repo.create_secret(secret_name, secret_value,"actions")
         print(f"✅ Secret '{secret_name}' created successfully in {SUB_REPO_NAME}")
+        # repo.create_secret(secret_name, secret_value,"actions")
 
 except Exception as e:
     print(f"❌ Failed to create secrets: {e}")
