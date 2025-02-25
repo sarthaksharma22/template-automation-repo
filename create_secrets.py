@@ -69,46 +69,43 @@ from github import Github, Auth
 
 # ✅ Get environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # Repository owner
-SUB_REPO_NAME = os.getenv("GITHUB_REPOSITORY")  # Repository name
+GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # GitHub username or organization name
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")  # Repository name
 
-if not GITHUB_TOKEN or not GITHUB_OWNER or not SUB_REPO_NAME:
+# ✅ Ensure required environment variables are set
+if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPOSITORY:
     raise ValueError("❌ Missing environment variables! Check GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPOSITORY.")
 
-# ✅ Authenticate using GitHub Auth Token (Recommended method)
+# ✅ Authenticate using Auth.Token() (fix for GitHub API)
 auth = Auth.Token(GITHUB_TOKEN)
 github_client = Github(auth=auth)
 
 try:
-    # 🔹 Get the repository object
-    print(f"🔹 Fetching repository: {GITHUB_OWNER}/{SUB_REPO_NAME}")
-    repo = github_client.get_repo(f"{GITHUB_OWNER}/{SUB_REPO_NAME}")
-    print(f"✅ Repository found: {repo.full_name}")
+    # 🔹 Print repo details for debugging
+    print(f"🔹 Fetching repository: {GITHUB_OWNER}/{GITHUB_REPOSITORY}")
 
-    # 🔹 Define 10 secrets with empty values (modify as needed)
+    # 🔹 Get the repository object
+    repo = github_client.get_repo(f"{GITHUB_OWNER}/{GITHUB_REPOSITORY}")
+
+    # 🔹 Define secrets with empty values
     secrets = {
         "SECRET_1": "value1",
         "SECRET_2": "value2",
         "SECRET_3": "value3",
         "SECRET_4": "value4",
         "SECRET_5": "value5",
-        "SECRET_6": "value6",
-        "SECRET_7": "value7",
-        "SECRET_8": "value8",
-        "SECRET_9": "value9",
-        "SECRET_10": "value10",
     }
 
     # 🔹 Add secrets to GitHub
     for secret_name, secret_value in secrets.items():
         repo.create_secret(secret_name, secret_value)
-        print(f"✅ Secret '{secret_name}' created successfully in {SUB_REPO_NAME}")
+        print(f"✅ Secret '{secret_name}' created successfully in {GITHUB_REPOSITORY}")
 
 except Exception as e:
     print(f"❌ Failed to create secrets: {e}")
 
 finally:
-    # Close the connection
-    github_client.close()
+    github_client.close()  # Close the connection
+
 
 
