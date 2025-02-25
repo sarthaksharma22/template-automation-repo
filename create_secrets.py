@@ -62,5 +62,5 @@ except Exception as e:
 #     print(repo.name)
 
 # To close connections after use
-g.close()
+# g.close()
 
