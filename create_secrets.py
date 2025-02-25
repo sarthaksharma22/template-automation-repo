@@ -69,14 +69,14 @@ from github import Github, Auth
 
 # ✅ Get environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # GitHub username or organization name
-GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")  # Repository name
+GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # GitHub username or org name
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY").split("/")[-1]  # Extract only repo name
 
 # ✅ Ensure required environment variables are set
 if not GITHUB_TOKEN or not GITHUB_OWNER or not GITHUB_REPOSITORY:
     raise ValueError("❌ Missing environment variables! Check GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPOSITORY.")
 
-# ✅ Authenticate using Auth.Token() (fix for GitHub API)
+# ✅ Authenticate using Auth.Token()
 auth = Auth.Token(GITHUB_TOKEN)
 github_client = Github(auth=auth)
 
@@ -106,6 +106,7 @@ except Exception as e:
 
 finally:
     github_client.close()  # Close the connection
+
 
 
 
