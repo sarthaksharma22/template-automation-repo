@@ -41,30 +41,26 @@
 
 
 
-import os
 from github import Github
+
+# Authentication is defined via github.Auth
 from github import Auth
 
-# Authentication using an access token
+# using an access token
 auth = Auth.Token(os.getenv("GITHUB_TOKEN"))
 
-# Instantiate the Github client with the access token
+# First create a Github instance:
+
+# Public Web Github
 g = Github(auth=auth)
 
-# Function to test authentication by listing repos
-def test_authentication():
-    try:
-        # Get the authenticated user's repositories
-        repos = g.get_user().get_repos()
-        if repos:
-            print("Authentication successful! Repositories:")
-            for repo in repos:
-                print(repo.name)  # Print the name of each repository
-        else:
-            print("No repositories found.")
-    except Exception as e:
-        print(f"Error: {e}")
+# Github Enterprise with custom hostname
+# g = Github(base_url="https://{hostname}/api/v3", auth=auth)
 
-# Run the test
-test_authentication()
+# Then play with your Github objects:
+for repo in g.get_user().get_repos():
+    print(repo.name)
+
+# To close connections after use
+g.close()
 
